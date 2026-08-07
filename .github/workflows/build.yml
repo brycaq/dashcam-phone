@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -25,10 +25,16 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x ./gradlew
 
+      # Automatically download valid binary wrapper jar
+      - name: Ensure Gradle Wrapper JAR exists
+        run: |
+          mkdir -p gradle/wrapper
+          curl -o gradle/wrapper/gradle-wrapper.jar -L https://raw.githubusercontent.com/gradle/gradle/main/gradle/wrapper/gradle-wrapper.jar
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Upload Built APK Artifact
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: dashcam-debug-apk
