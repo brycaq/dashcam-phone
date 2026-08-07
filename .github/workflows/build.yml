@@ -20,19 +20,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: Grant Execute Permission for Gradlew
-        run: chmod +x ./gradlew
+      - name: Setup Gradle Environment
+        uses: gradle/actions/setup-gradle@v3
 
-      # Automatically download valid binary wrapper jar
-      - name: Ensure Gradle Wrapper JAR exists
-        run: |
-          mkdir -p gradle/wrapper
-          curl -o gradle/wrapper/gradle-wrapper.jar -L https://raw.githubusercontent.com/gradle/gradle/main/gradle/wrapper/gradle-wrapper.jar
-
+      # Uses installed Gradle directly instead of broken wrapper jar
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
